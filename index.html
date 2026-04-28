@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Galaxia Interactiva 💖</title>
+<style>
+body {
+    margin: 0;
+    overflow: hidden;
+    background: black;
+    font-family: Arial, sans-serif;
+}
+
+canvas {
+    position: absolute;
+}
+
+.frase {
+    position: absolute;
+    color: white;
+    font-size: 20px;
+    animation: flotar 10s linear infinite;
+}
+
+@keyframes flotar {
+    from { transform: translateY(100vh); opacity: 0; }
+    to { transform: translateY(-10vh); opacity: 1; }
+}
+
+.boton {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    padding: 10px 15px;
+    background: pink;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<button class="boton" onclick="abrirMusica()">🎵 Reproducir canción</button>
+
+<script>
+const canvas = document.createElement("canvas");
+document.body.appendChild(canvas);
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let estrellas = [];
+let offsetX = 0;
+let offsetY = 0;
+let isDragging = false;
+let startX, startY;
+
+for (let i = 0; i < 200; i++) {
+    estrellas.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 2
+    });
+}
+
+function dibujar() {
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "white";
+    estrellas.forEach(e => {
+        ctx.beginPath();
+        ctx.arc(e.x + offsetX, e.y + offsetY, e.r, 0, Math.PI * 2);
+        ctx.fill();
+    });
+
+    requestAnimationFrame(dibujar);
+}
+dibujar();
+
+// Movimiento con mouse
+canvas.addEventListener("mousedown", (e) => {
+    isDragging = true;
+    startX = e.clientX - offsetX;
+    startY = e.clientY - offsetY;
+});
+
+canvas.addEventListener("mousemove", (e) => {
+    if (isDragging) {
+        offsetX = e.clientX - startX;
+        offsetY = e.clientY - startY;
+    }
+});
+
+canvas.addEventListener("mouseup", () => isDragging = false);
+
+// Movimiento con dedo (touch)
+canvas.addEventListener("touchstart", (e) => {
+    isDragging = true;
+    startX = e.touches[0].clientX - offsetX;
+    startY = e.touches[0].clientY - offsetY;
+});
+
+canvas.addEventListener("touchmove", (e) => {
+    if (isDragging) {
+        offsetX = e.touches[0].clientX - startX;
+        offsetY = e.touches[0].clientY - startY;
+    }
+});
+
+canvas.addEventListener("touchend", () => isDragging = false);
+
+// Frases
+const frases = [
+"Te amo💕",
+"Eres mi todo💖",
+"Mi luz🤍",
+"Mi princesita 🌹",
+"Mi niña hermosha 🤍",
+"Mi Mujer 💗",
+"Mi enanita ❤️",
+"Mi esposha ✨",
+"Mi vida entera 💫"
+];
+
+function crearFrase() {
+    const div = document.createElement("div");
+    div.className = "frase";
+    div.innerText = frases[Math.floor(Math.random() * frases.length)];
+    div.style.left = Math.random() * 90 + "vw";
+    div.style.fontSize = (16 + Math.random() * 20) + "px";
+    document.body.appendChild(div);
+
+    setTimeout(() => {
+        div.remove();
+    }, 10000);
+}
+
+setInterval(crearFrase, 1500);
+
+// Música
+function abrirMusica() {
+    window.open("https://www.youtube.com/watch?v=9wiEM0s4aCQ", "_blank");
+}
+</script>
+
+</body>
+</html>
